@@ -8,11 +8,7 @@ from tax_engine import calculate_tax_full
 def render(selected_year):
     st.header("รายงานสรุปการประเมินภาษี")
 
-    if selected_year != "2568":
-        st.info("ระบบสำหรับปีภาษี 2569 อยู่ระหว่างการดำเนินการปรับปรุงฐานข้อมูลตามกฎหมายใหม่")
-        return
-
-    result = calculate_tax_full(dict(st.session_state))
+    result = calculate_tax_full(dict(st.session_state), year=selected_year)
     b = result['breakdown']
 
     c1, c2, c3, c4 = st.columns(4)
@@ -51,11 +47,13 @@ def render(selected_year):
         ("ประกันชีวิต/สุขภาพ", b['life_health_total']),
         ("ประกันสุขภาพบิดามารดา", b['parent_health']),
         ("ประกันชีวิตคู่สมรส", b['spouse_life']),
-        ("พูลเกษียณ (PVD+RMF+SSF+บำนาญ)", b['pool_used']),
+        ("พูลเกษียณ (PVD+RMF+SSF+กอช.+บำนาญ)", b['pool_used']),
         ("Thai ESG", b['thai_esg_final']),
         ("ประกันสังคม", b['social_sec_final']),
         ("ดอกเบี้ยบ้าน", b['home_loan_final']),
+        ("Easy E-Receipt", b['easy_receipt_final']),
+        ("ติดตั้งโซลาร์เซลล์", b['solar_final']),
         ("เงินบริจาค", b['donation_total']),
     ]
     detail_df = pd.DataFrame(detail_rows, columns=['หมวด', 'จำนวนเงิน (บาท)'])
-    st.dataframe(detail_df.style.format({'จำนวนเงิน (บาท)': '{:,.0f}'}), use_container_width=True, hide_index=True)
+    st.dataframe(detail_df.style.format({'จำนวนเงิน (บาท)': '{:,.0f}'}), width='stretch', hide_index=True)

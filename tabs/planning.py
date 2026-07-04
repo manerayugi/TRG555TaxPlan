@@ -9,23 +9,23 @@ SIM_ITEMS = [
     ('ssf', 'เพิ่ม SSF (บาท)'),
     ('thai_esg', 'เพิ่ม Thai ESG (บาท)'),
     ('pvd', 'เพิ่ม PVD/กบข. (บาท)'),
+    ('nsf', 'เพิ่ม กอช. (บาท)'),
     ('annuity_ins', 'เพิ่มประกันบำนาญ (บาท)'),
     ('life_ins', 'เพิ่มเบี้ยประกันชีวิต/สุขภาพ (บาท)'),
     ('donate_education', 'เพิ่มเงินบริจาคการศึกษา (บาท)'),
+    ('solar_install', 'เพิ่มค่าติดตั้งโซลาร์เซลล์ (บาท)'),
+    ('easy_receipt_general', 'เพิ่ม Easy E-Receipt ร้านทั่วไป (บาท)'),
+    ('easy_receipt_otop', 'เพิ่ม Easy E-Receipt OTOP (บาท)'),
 ]
 
 
 def render(selected_year):
     st.header("เครื่องมือวางแผนลดหย่อนภาษี")
 
-    if selected_year != "2568":
-        st.info("รองรับเฉพาะปีภาษี 2568 ในขณะนี้")
-        return
-
-    base_result = calculate_tax_full(dict(st.session_state))
+    base_result = calculate_tax_full(dict(st.session_state), year=selected_year)
 
     st.subheader("🔍 ช่องว่างที่ยังลดหย่อนได้เพิ่ม (เรียงตามภาษีที่ประหยัดได้มากสุด)")
-    suggestions = suggest_tax_planning(dict(st.session_state))
+    suggestions = suggest_tax_planning(dict(st.session_state), year=selected_year)
 
     if not suggestions:
         st.success("คุณใช้สิทธิ์ลดหย่อนภาษีเต็มเพดานทุกหมวดแล้ว 🎉")
@@ -37,7 +37,7 @@ def render(selected_year):
                 'ยังใช้สิทธิ์ได้อีก (บาท)': '{:,.0f}',
                 'ประหยัดภาษีได้สูงสุด (บาท)': '{:,.0f}',
             }),
-            use_container_width=True, hide_index=True
+            width='stretch', hide_index=True
         )
         st.caption("ตัวเลข 'ประหยัดภาษีได้สูงสุด' คำนวณจากการใช้สิทธิ์เต็มเพดานในหมวดนั้นเพียงหมวดเดียว โดยหมวดอื่นคงเดิม")
 
@@ -67,7 +67,7 @@ def render(selected_year):
         st.info("กรอกจำนวนเงินในช่องด้านบนเพื่อเริ่มจำลองแผนใหม่")
         return
 
-    sim = simulate_plan(dict(st.session_state), overrides)
+    sim = simulate_plan(dict(st.session_state), overrides, year=selected_year)
     plan = sim['plan']
 
     st.divider()

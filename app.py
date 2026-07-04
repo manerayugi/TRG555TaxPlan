@@ -1,7 +1,7 @@
 # app.py
 import streamlit as st
 
-from tabs import income, deductions, insurance, donations, summary, planning
+from tabs import income, deductions, insurance, investments, stimulus, donations, summary, planning
 
 # ==========================================
 # ตั้งค่าระบบและ UI
@@ -28,7 +28,9 @@ DEFAULTS = {
     'life_ins': 0, 'health_ins': 0, 'annuity_ins': 0,
     'parent_health_ins': 0, 'spouse_life_ins': 0,
 
-    'pvd': 0, 'ssf': 0, 'rmf': 0, 'thai_esg': 0,
+    'pvd': 0, 'ssf': 0, 'rmf': 0, 'nsf': 0, 'thai_esg': 0,
+
+    'easy_receipt_general': 0, 'easy_receipt_otop': 0, 'solar_install': 0,
 
     'donate_education': 0, 'donate_other': 0,
 }
@@ -41,13 +43,15 @@ st.title(f"แบบจำลองการประเมินภาษี �
 # ==========================================
 # โครงสร้างแบบฟอร์ม (Tabs)
 # ==========================================
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "1. ข้อมูลรายได้",
     "2. ลดหย่อนส่วนตัว/ครอบครัว",
-    "3. ประกันและการลงทุน",
-    "4. เงินบริจาค",
-    "5. รายงานสรุปผล",
-    "6. วางแผนลดหย่อนภาษี",
+    "3. ประกันภัย",
+    "4. กองทุน/การลงทุน",
+    "5. มาตรการกระตุ้นเศรษฐกิจ",
+    "6. เงินบริจาค",
+    "7. รายงานสรุปผล",
+    "8. วางแผนลดหย่อนภาษี",
 ])
 
 with tab1:
@@ -60,10 +64,16 @@ with tab3:
     insurance.render()
 
 with tab4:
-    donations.render()
+    investments.render()
 
 with tab5:
-    summary.render(selected_year)
+    stimulus.render(selected_year)
 
 with tab6:
+    donations.render()
+
+with tab7:
+    summary.render(selected_year)
+
+with tab8:
     planning.render(selected_year)
